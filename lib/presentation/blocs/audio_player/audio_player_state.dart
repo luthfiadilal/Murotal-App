@@ -10,6 +10,7 @@ class AudioPlayerState extends Equatable {
   final Duration totalDuration;
   final SurahModel? currentSurah;
   final EditionModel? currentQari;
+  final String? errorMessage;
 
   const AudioPlayerState({
     this.isPlaying = false,
@@ -18,6 +19,7 @@ class AudioPlayerState extends Equatable {
     this.totalDuration = Duration.zero,
     this.currentSurah,
     this.currentQari,
+    this.errorMessage,
   });
 
   AudioPlayerState copyWith({
@@ -27,6 +29,7 @@ class AudioPlayerState extends Equatable {
     Duration? totalDuration,
     SurahModel? currentSurah,
     EditionModel? currentQari,
+    String? errorMessage,
   }) {
     return AudioPlayerState(
       isPlaying: isPlaying ?? this.isPlaying,
@@ -35,6 +38,7 @@ class AudioPlayerState extends Equatable {
       totalDuration: totalDuration ?? this.totalDuration,
       currentSurah: currentSurah ?? this.currentSurah,
       currentQari: currentQari ?? this.currentQari,
+      errorMessage: errorMessage, // We don't use ?? to allow clearing it
     );
   }
 
@@ -46,5 +50,6 @@ class AudioPlayerState extends Equatable {
         totalDuration,
         currentSurah,
         currentQari,
+        errorMessage,
       ];
 }

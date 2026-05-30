@@ -4,6 +4,9 @@ import '../../../data/repositories/quran_repository.dart';
 import 'quran_event.dart';
 import 'quran_state.dart';
 
+/// `QuranBloc` bertanggung jawab untuk mengelola data utama Al-Quran di dalam memori.
+/// BLoC ini memuat daftar Surah dan daftar Qari saat aplikasi pertama kali dibuka,
+/// dan menyediakan logika pencarian (Search) untuk memfilter data tersebut.
 class QuranBloc extends Bloc<QuranEvent, QuranState> {
   final QuranRepository repository;
 
@@ -12,6 +15,9 @@ class QuranBloc extends Bloc<QuranEvent, QuranState> {
     on<SearchQuran>(_onSearchQuran);
   }
 
+  /// Event Handler untuk `FetchInitialData`.
+  /// Dipanggil sekali saat aplikasi mulai (biasanya di main.dart atau SplashScreen).
+  /// Mengambil data dari `QuranRepository` secara paralel untuk mempercepat waktu tunggu.
   Future<void> _onFetchInitialData(
     FetchInitialData event,
     Emitter<QuranState> emit,
@@ -32,6 +38,9 @@ class QuranBloc extends Bloc<QuranEvent, QuranState> {
     }
   }
 
+  /// Event Handler untuk `SearchQuran`.
+  /// Fungsi ini tidak melakukan pemanggilan API baru (karena pencarian dilakukan secara lokal / offline)
+  /// dengan mencocokkan teks `query` terhadap nama Surah dan nama Qari.
   void _onSearchQuran(
     SearchQuran event,
     Emitter<QuranState> emit,

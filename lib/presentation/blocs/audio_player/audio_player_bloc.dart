@@ -11,6 +11,10 @@ import '../quran/quran_state.dart';
 import 'audio_player_event.dart';
 import 'audio_player_state.dart';
 
+/// `AudioPlayerBloc` adalah pusat kendali (State Management) untuk semua operasi pemutar musik.
+/// BLoC ini mendengarkan event seperti `PlayAudio`, `PauseAudio`, `PlayNextAudio`, dll
+/// dan memperbarui antarmuka (UI) dengan memancarkan `AudioPlayerState` yang baru.
+/// BLoC ini bekerja erat dengan `MyAudioHandler` untuk pemutaran audio di latar belakang.
 class AudioPlayerBloc extends Bloc<AudioPlayerEvent, AudioPlayerState> {
   final MyAudioHandler audioHandler;
   final ApiService apiService;
@@ -24,6 +28,7 @@ class AudioPlayerBloc extends Bloc<AudioPlayerEvent, AudioPlayerState> {
   StreamSubscription? _skipNextSubscription;
   StreamSubscription? _skipPrevSubscription;
 
+  /// Constructor: Menerima dependensi yang dibutuhkan dan mendaftarkan pemetaan Event ke fungsi penanganannya.
   AudioPlayerBloc({
     required this.audioHandler,
     required this.apiService,
@@ -98,14 +103,21 @@ class AudioPlayerBloc extends Bloc<AudioPlayerEvent, AudioPlayerState> {
           'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Quran_Kareem.svg/1024px-Quran_Kareem.svg.png'), // placeholder image
     );
 
-    await audioHandler.playUrl(url, item: mediaItem);
+    try {
+      await audioHandler.playUrl(url, item: mediaItem);
 
-    emit(state.copyWith(
-      currentSurah: event.surah,
-      currentQari: event.qari,
-      isPlaying: true,
-      isPaused: false,
-    ));
+      emit(state.copyWith(
+        currentSurah: event.surah,
+        currentQari: event.qari,
+        isPlaying: true,
+        isPaused: false,
+      ));
+    } catch (e) {
+      emit(state.copyWith(
+        errorMessage: 'Audio tidak tersedia untuk edisi ini.',
+        isPlaying: false,
+      ));
+    }
   }
 
   Future<void> _onPauseAudio(

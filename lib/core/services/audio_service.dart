@@ -4,7 +4,7 @@ class AudioService {
   final AudioPlayer _audioPlayer;
 
   AudioService({AudioPlayer? audioPlayer})
-      : _audioPlayer = audioPlayer ?? AudioPlayer();
+    : _audioPlayer = audioPlayer ?? AudioPlayer();
 
   AudioPlayer get player => _audioPlayer;
 
@@ -30,7 +30,8 @@ class AudioService {
 
   Stream<Duration> get onPositionChanged => _audioPlayer.onPositionChanged;
   Stream<Duration> get onDurationChanged => _audioPlayer.onDurationChanged;
-  Stream<PlayerState> get onPlayerStateChanged => _audioPlayer.onPlayerStateChanged;
+  Stream<PlayerState> get onPlayerStateChanged =>
+      _audioPlayer.onPlayerStateChanged;
   Stream<void> get onPlayerComplete => _audioPlayer.onPlayerComplete;
 
   void dispose() {
