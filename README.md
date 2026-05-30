@@ -86,7 +86,4 @@ Desain aplikasi mengusung palet warna *Dark Emerald* (`#013226`) sebagai warna d
   <img src="lib/assets/MiniPalyerBarNotifikasi.PNG" alt="Mini Player Notifikasi" width="24%"></img>
 </div>
 
-## Kontributor
-
-- **Luthfi Adilal Mahbub** - *Lead Developer* - [GitHub Profile](https://github.com/luthfiadilal)
 
