@@ -1,15 +1,16 @@
 import 'dart:async';
 
+import 'package:audio_service/audio_service.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/network/api_service.dart';
-import '../../../core/services/audio_service.dart';
+import '../../../core/services/my_audio_handler.dart';
 import 'audio_player_event.dart';
 import 'audio_player_state.dart';
 
 class AudioPlayerBloc extends Bloc<AudioPlayerEvent, AudioPlayerState> {
-  final AudioService audioService;
+  final MyAudioHandler audioHandler;
   final ApiService apiService;
 
   StreamSubscription? _positionSubscription;
@@ -18,7 +19,7 @@ class AudioPlayerBloc extends Bloc<AudioPlayerEvent, AudioPlayerState> {
   StreamSubscription? _playerCompleteSubscription;
 
   AudioPlayerBloc({
-    required this.audioService,
+    required this.audioHandler,
     required this.apiService,
   }) : super(const AudioPlayerState()) {
     on<PlayAudio>(_onPlayAudio);
@@ -34,21 +35,21 @@ class AudioPlayerBloc extends Bloc<AudioPlayerEvent, AudioPlayerState> {
   }
 
   void _initSubscriptions() {
-    _positionSubscription = audioService.onPositionChanged.listen(
+    _positionSubscription = audioHandler.onPositionChanged.listen(
       (position) => add(AudioPositionChanged(position)),
     );
 
-    _durationSubscription = audioService.onDurationChanged.listen(
+    _durationSubscription = audioHandler.onDurationChanged.listen(
       (duration) => add(AudioDurationChanged(duration)),
     );
 
-    _playerStateSubscription = audioService.onPlayerStateChanged.listen(
+    _playerStateSubscription = audioHandler.onPlayerStateChanged.listen(
       (state) {
         add(AudioPlayerStateChanged(state == PlayerState.playing));
       },
     );
 
-    _playerCompleteSubscription = audioService.onPlayerComplete.listen(
+    _playerCompleteSubscription = audioHandler.onPlayerComplete.listen(
       (_) {
         add(const AudioPlayerStateChanged(false));
         add(const AudioPositionChanged(Duration.zero));
@@ -71,7 +72,16 @@ class AudioPlayerBloc extends Bloc<AudioPlayerEvent, AudioPlayerState> {
       edition: edition,
     );
 
-    await audioService.play(url);
+    final mediaItem = MediaItem(
+      id: url,
+      album: event.qari.englishName ?? 'Quran',
+      title: event.surah.englishName ?? 'Surah',
+      artist: event.qari.englishName ?? 'Qari',
+      artUri: Uri.parse(
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Quran_Kareem.svg/1024px-Quran_Kareem.svg.png'), // placeholder image
+    );
+
+    await audioHandler.playUrl(url, item: mediaItem);
 
     emit(state.copyWith(
       currentSurah: event.surah,
@@ -85,7 +95,7 @@ class AudioPlayerBloc extends Bloc<AudioPlayerEvent, AudioPlayerState> {
     PauseAudio event,
     Emitter<AudioPlayerState> emit,
   ) async {
-    await audioService.pause();
+    await audioHandler.pause();
     emit(state.copyWith(isPlaying: false, isPaused: true));
   }
 
@@ -93,7 +103,7 @@ class AudioPlayerBloc extends Bloc<AudioPlayerEvent, AudioPlayerState> {
     ResumeAudio event,
     Emitter<AudioPlayerState> emit,
   ) async {
-    await audioService.resume();
+    await audioHandler.play();
     emit(state.copyWith(isPlaying: true, isPaused: false));
   }
 
@@ -101,7 +111,7 @@ class AudioPlayerBloc extends Bloc<AudioPlayerEvent, AudioPlayerState> {
     StopAudio event,
     Emitter<AudioPlayerState> emit,
   ) async {
-    await audioService.stop();
+    await audioHandler.stop();
     emit(state.copyWith(
       isPlaying: false,
       isPaused: false,
@@ -113,7 +123,7 @@ class AudioPlayerBloc extends Bloc<AudioPlayerEvent, AudioPlayerState> {
     SeekAudio event,
     Emitter<AudioPlayerState> emit,
   ) async {
-    await audioService.seek(event.position);
+    await audioHandler.seek(event.position);
   }
 
   void _onAudioPositionChanged(
@@ -148,9 +158,6 @@ class AudioPlayerBloc extends Bloc<AudioPlayerEvent, AudioPlayerState> {
     _durationSubscription?.cancel();
     _playerStateSubscription?.cancel();
     _playerCompleteSubscription?.cancel();
-    // Do not dispose audioService here if it's going to be reused.
-    // If audioService is a singleton/provider, it might be disposed elsewhere.
-    // audioService.dispose();
     return super.close();
   }
 }
