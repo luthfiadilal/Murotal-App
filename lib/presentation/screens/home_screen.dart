@@ -3,7 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../blocs/audio_player/audio_player_bloc.dart';
 import '../blocs/audio_player/audio_player_event.dart';
+import '../blocs/audio_player/audio_player_state.dart';
 import '../blocs/quran/quran_bloc.dart';
+import '../widgets/mini_equalizer.dart';
 import '../blocs/quran/quran_state.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -36,39 +38,51 @@ class HomeScreen extends StatelessWidget {
               itemCount: surahs.length,
               itemBuilder: (context, index) {
                 final surah = surahs[index];
-                return ListTile(
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  leading: Container(
-                    width: 48,
-                    height: 48,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      color: Colors.white10,
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Text(
-                      '${surah.number}',
-                      style: const TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  title: Text(
-                    surah.englishName ?? '',
-                    style: const TextStyle(fontWeight: FontWeight.w600),
-                  ),
-                  subtitle: Text(
-                    '${surah.revelationType} • ${surah.numberOfAyahs} Ayahs',
-                    style: TextStyle(color: Colors.grey.shade400),
-                  ),
-                  trailing: Text(
-                    surah.name ?? '',
-                    style: const TextStyle(fontSize: 20, color: Colors.white),
-                  ),
-                  onTap: () {
-                    if (defaultQari != null) {
-                      context.read<AudioPlayerBloc>().add(
-                            PlayAudio(surah: surah, qari: defaultQari),
-                          );
-                    }
+                return BlocBuilder<AudioPlayerBloc, AudioPlayerState>(
+                  builder: (context, audioState) {
+                    final isCurrentSurah = audioState.currentSurah?.number == surah.number;
+                    final isPlaying = audioState.isPlaying;
+
+                    return ListTile(
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      leading: Container(
+                        width: 48,
+                        height: 48,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          color: Colors.white10,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: isCurrentSurah 
+                          ? MiniEqualizer(isPlaying: isPlaying)
+                          : Text(
+                              '${surah.number}',
+                              style: const TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                      ),
+                      title: Text(
+                        surah.englishName ?? '',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          color: isCurrentSurah ? const Color(0xFF1DB954) : Colors.white,
+                        ),
+                      ),
+                      subtitle: Text(
+                        '${surah.revelationType} • ${surah.numberOfAyahs} Ayahs',
+                        style: TextStyle(color: Colors.grey.shade400),
+                      ),
+                      trailing: Text(
+                        surah.name ?? '',
+                        style: const TextStyle(fontSize: 20, color: Colors.white),
+                      ),
+                      onTap: () {
+                        if (defaultQari != null) {
+                          context.read<AudioPlayerBloc>().add(
+                                PlayAudio(surah: surah, qari: defaultQari),
+                              );
+                        }
+                      },
+                    );
                   },
                 );
               },

@@ -11,6 +11,7 @@ import 'presentation/blocs/favorite/favorite_bloc.dart';
 import 'presentation/blocs/favorite/favorite_event.dart';
 import 'presentation/blocs/quran/quran_bloc.dart';
 import 'presentation/blocs/quran/quran_event.dart';
+import 'presentation/blocs/surah_detail/surah_detail_bloc.dart';
 import 'presentation/screens/main_screen.dart';
 
 Future<void> main() async {
@@ -63,6 +64,11 @@ class MyApp extends StatelessWidget {
             create: (context) => FavoriteBloc(
               repository: context.read<FavoriteRepository>(),
             )..add(LoadFavorites()),
+          ),
+          BlocProvider(
+            create: (context) => SurahDetailBloc(
+              repository: context.read<QuranRepository>(),
+            ),
           ),
         ],
         child: MaterialApp(

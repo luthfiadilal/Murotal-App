@@ -44,5 +44,5 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 
-documentation_API.md
+dokumentasi_API.md
 Todo.md

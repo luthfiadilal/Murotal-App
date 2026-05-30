@@ -49,4 +49,19 @@ class QuranRepository {
       throw Exception(e.message ?? 'Failed to fetch surahs');
     }
   }
+
+  /// Mengambil detail satu Surah beserta ayat-ayatnya
+  Future<SurahModel> getSurahDetails(int surahNumber) async {
+    try {
+      final response = await _apiService.getSurah(surahNumber);
+      final apiResponse = ApiResponse<Map<String, dynamic>>.fromJson(
+        response.data,
+        (data) => data as Map<String, dynamic>,
+      );
+
+      return SurahModel.fromJson(apiResponse.data);
+    } on DioException catch (e) {
+      throw Exception(e.message ?? 'Failed to fetch surah details');
+    }
+  }
 }
