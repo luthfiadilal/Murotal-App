@@ -47,12 +47,22 @@ Aplikasi ini diimplementasikan menggunakan arsitektur **BLoC (Business Logic Com
 ### Struktur Direktori (Clean Architecture)
 ```text
 lib/
-├── core/               # Konfigurasi Tema (AppColors), API Network, Audio Handler
-├── data/               # Model Entitas JSON dan Repositori (QuranRepository, dll)
-├── presentation/       # Lapis Antarmuka
-│   ├── blocs/          # Pusat Logika Bisnis (AudioPlayerBloc, QuranBloc, dll)
-│   ├── screens/        # Komponen Halaman Penuh (Home, Player, Lyrics)
-│   └── widgets/        # Komponen UI Reusable (MiniPlayer, LargeEqualizer)
+├── assets/             # File statis (logo, ikon, dan screenshot)
+├── core/               # Konfigurasi Inti Aplikasi
+│   ├── network/        # Konfigurasi API Client (ApiService dengan Dio)
+│   ├── services/       # Layanan Latar Belakang (AudioService, AudioHandler)
+│   └── theme/          # Konfigurasi Desain & Warna Dasar (AppColors)
+├── data/               # Lapis Data (Entitas & Repositori)
+│   ├── models/         # Model Data JSON (Quran, Surah, Ayah, Edition, dll)
+│   └── repositories/   # Eksekutor Sumber Data (API & Shared Preferences)
+├── presentation/       # Lapis Antarmuka (UI/UX)
+│   ├── blocs/          # Manajemen State (BLoC)
+│   │   ├── audio_player/ # Logika Pemutar Musik & Latar Belakang
+│   │   ├── favorite/     # Logika Simpanan Surah Favorit (Bookmark)
+│   │   ├── quran/        # Logika Pencarian & Daftar Qari/Surah
+│   │   └── surah_detail/ # Logika Pengambilan Lirik/Ayat per Surah
+│   ├── screens/        # Halaman Penuh (Home, Player, Lyrics, Search, dll)
+│   └── widgets/        # Komponen UI Reusable (MiniPlayer, Equalizer, dll)
 └── main.dart           # Entry Point & Dependency Injection
 ```
 
