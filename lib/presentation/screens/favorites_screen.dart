@@ -42,7 +42,7 @@ class FavoritesScreen extends StatelessWidget {
                     width: 48,
                     height: 48,
                     decoration: BoxDecoration(
-                      color: const Color(0xFF1DB954),
+                      color: const Color(0xFFD3AA58),
                       borderRadius: BorderRadius.circular(4),
                     ),
                     child: const Icon(Icons.favorite, color: Colors.white),

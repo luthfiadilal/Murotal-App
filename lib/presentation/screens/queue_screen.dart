@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../core/theme/app_colors.dart';
 import '../blocs/audio_player/audio_player_bloc.dart';
 import '../blocs/audio_player/audio_player_event.dart';
 import '../blocs/quran/quran_bloc.dart';
@@ -12,7 +13,7 @@ class QueueScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF121212),
+      backgroundColor: AppColors.darkEmerald,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -50,7 +51,7 @@ class QueueScreen extends StatelessWidget {
                   title: Text(
                     surah.englishName ?? '',
                     style: TextStyle(
-                      color: isCurrent ? const Color(0xFF1DB954) : Colors.white,
+                      color: isCurrent ? AppColors.premiumGold : Colors.white,
                       fontWeight: isCurrent ? FontWeight.bold : FontWeight.normal,
                     ),
                   ),

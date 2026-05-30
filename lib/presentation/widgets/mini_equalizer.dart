@@ -8,7 +8,7 @@ class MiniEqualizer extends StatefulWidget {
   const MiniEqualizer({
     super.key,
     required this.isPlaying,
-    this.color = const Color(0xFF1DB954),
+    this.color = const Color(0xFFD3AA58),
   });
 
   @override

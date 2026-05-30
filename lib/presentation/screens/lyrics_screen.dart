@@ -9,7 +9,7 @@ class LyricsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF121212),
+      backgroundColor: const Color(0xFF013226),
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -23,7 +23,7 @@ class LyricsScreen extends StatelessWidget {
       body: BlocBuilder<SurahDetailBloc, SurahDetailState>(
         builder: (context, state) {
           if (state is SurahDetailLoading) {
-            return const Center(child: CircularProgressIndicator(color: Color(0xFF1DB954)));
+            return const Center(child: CircularProgressIndicator(color: Color(0xFFD3AA58)));
           } else if (state is SurahDetailError) {
             return Center(child: Text(state.message, style: const TextStyle(color: Colors.red)));
           } else if (state is SurahDetailLoaded) {
@@ -57,7 +57,7 @@ class LyricsScreen extends StatelessWidget {
                         "Ayat ${ayah.numberInSurah}",
                         style: const TextStyle(
                           fontSize: 14,
-                          color: Color(0xFF1DB954),
+                          color: Color(0xFFD3AA58),
                           fontWeight: FontWeight.bold,
                         ),
                       ),

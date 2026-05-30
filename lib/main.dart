@@ -11,8 +11,9 @@ import 'presentation/blocs/favorite/favorite_bloc.dart';
 import 'presentation/blocs/favorite/favorite_event.dart';
 import 'presentation/blocs/quran/quran_bloc.dart';
 import 'presentation/blocs/quran/quran_event.dart';
+import 'core/theme/app_colors.dart';
 import 'presentation/blocs/surah_detail/surah_detail_bloc.dart';
-import 'presentation/screens/main_screen.dart';
+import 'presentation/screens/splash_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -41,34 +42,33 @@ class MyApp extends StatelessWidget {
         RepositoryProvider(create: (_) => ApiService()),
         RepositoryProvider.value(value: audioHandler),
         RepositoryProvider(
-          create: (context) => QuranRepository(
-            apiService: context.read<ApiService>(),
-          ),
+          create: (context) =>
+              QuranRepository(apiService: context.read<ApiService>()),
         ),
         RepositoryProvider(create: (_) => FavoriteRepository()),
       ],
       child: MultiBlocProvider(
         providers: [
           BlocProvider(
-            create: (context) => QuranBloc(
-              repository: context.read<QuranRepository>(),
-            )..add(FetchInitialData()),
+            create: (context) =>
+                QuranBloc(repository: context.read<QuranRepository>())
+                  ..add(FetchInitialData()),
           ),
           BlocProvider(
             create: (context) => AudioPlayerBloc(
               audioHandler: context.read<MyAudioHandler>(),
               apiService: context.read<ApiService>(),
+              quranBloc: context.read<QuranBloc>(),
             ),
           ),
           BlocProvider(
-            create: (context) => FavoriteBloc(
-              repository: context.read<FavoriteRepository>(),
-            )..add(LoadFavorites()),
+            create: (context) =>
+                FavoriteBloc(repository: context.read<FavoriteRepository>())
+                  ..add(LoadFavorites()),
           ),
           BlocProvider(
-            create: (context) => SurahDetailBloc(
-              repository: context.read<QuranRepository>(),
-            ),
+            create: (context) =>
+                SurahDetailBloc(repository: context.read<QuranRepository>()),
           ),
         ],
         child: MaterialApp(
@@ -77,22 +77,22 @@ class MyApp extends StatelessWidget {
           theme: ThemeData(
             useMaterial3: true,
             colorScheme: ColorScheme.fromSeed(
-              seedColor: const Color(0xFF1DB954), // Spotify Green
+              seedColor: AppColors.darkEmerald,
               brightness: Brightness.dark,
-              surface: const Color(0xFF121212),
+              surface: AppColors.darkEmerald,
             ),
-            scaffoldBackgroundColor: const Color(0xFF121212),
+            scaffoldBackgroundColor: AppColors.darkEmerald,
             bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-              backgroundColor: Color(0xFF181818),
-              selectedItemColor: Colors.white,
-              unselectedItemColor: Colors.grey,
+              backgroundColor: AppColors.deepGreen,
+              selectedItemColor: AppColors.premiumGold,
+              unselectedItemColor: Colors.white54,
             ),
             appBarTheme: const AppBarTheme(
-              backgroundColor: Color(0xFF121212),
+              backgroundColor: AppColors.darkEmerald,
               elevation: 0,
             ),
           ),
-          home: const MainScreen(),
+          home: const SplashScreen(),
         ),
       ),
     );

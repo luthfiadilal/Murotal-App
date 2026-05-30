@@ -26,6 +26,10 @@ class ResumeAudio extends AudioPlayerEvent {}
 
 class StopAudio extends AudioPlayerEvent {}
 
+class PlayNextAudio extends AudioPlayerEvent {}
+
+class PlayPreviousAudio extends AudioPlayerEvent {}
+
 class SeekAudio extends AudioPlayerEvent {
   final Duration position;
 

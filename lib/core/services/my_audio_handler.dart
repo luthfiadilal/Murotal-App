@@ -1,8 +1,11 @@
+import 'dart:async';
 import 'package:audio_service/audio_service.dart';
 import 'package:audioplayers/audioplayers.dart';
 
 class MyAudioHandler extends BaseAudioHandler with SeekHandler {
   final AudioPlayer _player = AudioPlayer();
+  final _skipToNextSubject = StreamController<void>.broadcast();
+  final _skipToPreviousSubject = StreamController<void>.broadcast();
 
   MyAudioHandler() {
     _player.onPlayerStateChanged.listen((state) {
@@ -46,6 +49,8 @@ class MyAudioHandler extends BaseAudioHandler with SeekHandler {
   Stream<Duration> get onDurationChanged => _player.onDurationChanged;
   Stream<PlayerState> get onPlayerStateChanged => _player.onPlayerStateChanged;
   Stream<void> get onPlayerComplete => _player.onPlayerComplete;
+  Stream<void> get onSkipToNext => _skipToNextSubject.stream;
+  Stream<void> get onSkipToPrevious => _skipToPreviousSubject.stream;
 
   @override
   Future<void> play() => _player.resume();
@@ -65,5 +70,15 @@ class MyAudioHandler extends BaseAudioHandler with SeekHandler {
   Future<void> playUrl(String url, {required MediaItem item}) async {
     mediaItem.add(item);
     await _player.play(UrlSource(url));
+  }
+
+  @override
+  Future<void> skipToNext() async {
+    _skipToNextSubject.add(null);
+  }
+
+  @override
+  Future<void> skipToPrevious() async {
+    _skipToPreviousSubject.add(null);
   }
 }

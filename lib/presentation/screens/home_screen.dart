@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../core/theme/app_colors.dart';
 import '../blocs/audio_player/audio_player_bloc.dart';
 import '../blocs/audio_player/audio_player_event.dart';
 import '../blocs/audio_player/audio_player_state.dart';
@@ -64,7 +65,7 @@ class HomeScreen extends StatelessWidget {
                         surah.englishName ?? '',
                         style: TextStyle(
                           fontWeight: FontWeight.w600,
-                          color: isCurrentSurah ? const Color(0xFF1DB954) : Colors.white,
+                          color: isCurrentSurah ? AppColors.premiumGold : Colors.white,
                         ),
                       ),
                       subtitle: Text(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../core/theme/app_colors.dart';
 import '../../data/models/favorite_item_model.dart';
 import '../blocs/audio_player/audio_player_bloc.dart';
 import '../blocs/audio_player/audio_player_event.dart';
@@ -10,6 +11,7 @@ import '../blocs/favorite/favorite_event.dart';
 import '../blocs/favorite/favorite_state.dart';
 import '../blocs/surah_detail/surah_detail_bloc.dart';
 import '../blocs/surah_detail/surah_detail_event.dart';
+import '../widgets/large_equalizer.dart';
 import 'lyrics_screen.dart';
 import 'queue_screen.dart';
 
@@ -53,8 +55,8 @@ class _PlayerScreenState extends State<PlayerScreen> {
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              Color(0xFF4A4A4A),
-              Color(0xFF121212),
+              AppColors.deepGreen, // Deep Green
+              AppColors.darkEmerald, // Dark Emerald
             ],
           ),
         ),
@@ -101,8 +103,10 @@ class _PlayerScreenState extends State<PlayerScreen> {
                                 fontSize: 12, fontWeight: FontWeight.bold),
                           ),
                           IconButton(
-                            icon: const Icon(Icons.more_vert),
-                            onPressed: () {},
+                            icon: const Icon(Icons.skip_next, color: Colors.white, size: 36),
+                            onPressed: () {
+                              context.read<AudioPlayerBloc>().add(PlayNextAudio());
+                            },
                           ),
                         ],
                       ),
@@ -116,19 +120,24 @@ class _PlayerScreenState extends State<PlayerScreen> {
                           aspectRatio: 1,
                           child: Container(
                             decoration: BoxDecoration(
-                              color: Colors.grey[800],
-                              borderRadius: BorderRadius.circular(8),
+                              shape: BoxShape.circle,
+                              gradient: const RadialGradient(
+                                colors: [
+                                  AppColors.deepGreen,
+                                  AppColors.darkEmerald,
+                                ],
+                              ),
                               boxShadow: [
                                 BoxShadow(
-                                  color: Colors.black.withOpacity(0.5),
-                                  spreadRadius: 5,
-                                  blurRadius: 20,
-                                  offset: const Offset(0, 10),
+                                  color: AppColors.premiumGold.withOpacity(0.15),
+                                  spreadRadius: 10,
+                                  blurRadius: 30,
                                 ),
                               ],
                             ),
-                            child: const Icon(Icons.music_note,
-                                size: 100, color: Colors.white54),
+                            child: Center(
+                              child: LargeEqualizer(isPlaying: state.isPlaying),
+                            ),
                           ),
                         ),
                       ),
@@ -177,7 +186,7 @@ class _PlayerScreenState extends State<PlayerScreen> {
                                       ? Icons.favorite
                                       : Icons.favorite_border,
                                   color: isFav
-                                      ? const Color(0xFF1DB954)
+                                      ? AppColors.premiumGold
                                       : Colors.white,
                                   size: 32,
                                 ),
@@ -270,21 +279,23 @@ class _PlayerScreenState extends State<PlayerScreen> {
                             onPressed: () {},
                           ),
                           IconButton(
-                            icon: const Icon(Icons.skip_previous, size: 40),
-                            onPressed: () {},
+                            icon: const Icon(Icons.skip_previous, color: Colors.white, size: 36),
+                            onPressed: () {
+                              context.read<AudioPlayerBloc>().add(PlayPreviousAudio());
+                            },
                           ),
                           Container(
                             width: 72,
                             height: 72,
                             decoration: const BoxDecoration(
-                              color: Colors.white,
+                              color: AppColors.ivoryWhite, // Ivory White
                               shape: BoxShape.circle,
                             ),
                             child: IconButton(
                               icon: Icon(
                                 state.isPlaying ? Icons.pause : Icons.play_arrow,
                                 size: 40,
-                                color: Colors.black,
+                                color: AppColors.darkEmerald, // Dark Emerald
                               ),
                               onPressed: () {
                                 final bloc = context.read<AudioPlayerBloc>();
@@ -297,8 +308,10 @@ class _PlayerScreenState extends State<PlayerScreen> {
                             ),
                           ),
                           IconButton(
-                            icon: const Icon(Icons.skip_next, size: 40),
-                            onPressed: () {},
+                            icon: const Icon(Icons.skip_next, color: Colors.white, size: 36),
+                            onPressed: () {
+                              context.read<AudioPlayerBloc>().add(PlayNextAudio());
+                            },
                           ),
                           IconButton(
                             icon: const Icon(Icons.repeat,

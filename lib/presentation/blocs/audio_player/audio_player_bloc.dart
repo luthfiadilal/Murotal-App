@@ -6,26 +6,35 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/network/api_service.dart';
 import '../../../core/services/my_audio_handler.dart';
+import '../quran/quran_bloc.dart';
+import '../quran/quran_state.dart';
 import 'audio_player_event.dart';
 import 'audio_player_state.dart';
 
 class AudioPlayerBloc extends Bloc<AudioPlayerEvent, AudioPlayerState> {
   final MyAudioHandler audioHandler;
   final ApiService apiService;
+  final QuranBloc quranBloc;
 
   StreamSubscription? _positionSubscription;
   StreamSubscription? _durationSubscription;
   StreamSubscription? _playerStateSubscription;
   StreamSubscription? _playerCompleteSubscription;
 
+  StreamSubscription? _skipNextSubscription;
+  StreamSubscription? _skipPrevSubscription;
+
   AudioPlayerBloc({
     required this.audioHandler,
     required this.apiService,
+    required this.quranBloc,
   }) : super(const AudioPlayerState()) {
     on<PlayAudio>(_onPlayAudio);
     on<PauseAudio>(_onPauseAudio);
     on<ResumeAudio>(_onResumeAudio);
     on<StopAudio>(_onStopAudio);
+    on<PlayNextAudio>(_onPlayNextAudio);
+    on<PlayPreviousAudio>(_onPlayPreviousAudio);
     on<SeekAudio>(_onSeekAudio);
     on<AudioPositionChanged>(_onAudioPositionChanged);
     on<AudioDurationChanged>(_onAudioDurationChanged);
@@ -53,9 +62,17 @@ class AudioPlayerBloc extends Bloc<AudioPlayerEvent, AudioPlayerState> {
       (_) {
         add(const AudioPlayerStateChanged(false));
         add(const AudioPositionChanged(Duration.zero));
-        add(StopAudio());
+        add(PlayNextAudio());
       },
     );
+
+    _skipNextSubscription = audioHandler.onSkipToNext.listen((_) {
+      add(PlayNextAudio());
+    });
+
+    _skipPrevSubscription = audioHandler.onSkipToPrevious.listen((_) {
+      add(PlayPreviousAudio());
+    });
   }
 
   Future<void> _onPlayAudio(
@@ -119,6 +136,49 @@ class AudioPlayerBloc extends Bloc<AudioPlayerEvent, AudioPlayerState> {
     ));
   }
 
+  Future<void> _onPlayNextAudio(
+    PlayNextAudio event,
+    Emitter<AudioPlayerState> emit,
+  ) async {
+    if (state.currentSurah == null || state.currentQari == null) return;
+    
+    final currentNumber = state.currentSurah!.number;
+    if (currentNumber == null || currentNumber >= 114) {
+      add(StopAudio());
+      return;
+    }
+
+    final nextNumber = currentNumber + 1;
+    final nextSurah = quranBloc.state is QuranLoaded 
+        ? (quranBloc.state as QuranLoaded).allSurahs.firstWhere((s) => s.number == nextNumber, orElse: () => state.currentSurah!)
+        : null;
+
+    if (nextSurah != null && nextSurah.number != currentNumber) {
+      add(PlayAudio(surah: nextSurah, qari: state.currentQari!));
+    }
+  }
+
+  Future<void> _onPlayPreviousAudio(
+    PlayPreviousAudio event,
+    Emitter<AudioPlayerState> emit,
+  ) async {
+    if (state.currentSurah == null || state.currentQari == null) return;
+    
+    final currentNumber = state.currentSurah!.number;
+    if (currentNumber == null || currentNumber <= 1) {
+      return;
+    }
+
+    final prevNumber = currentNumber - 1;
+    final prevSurah = quranBloc.state is QuranLoaded 
+        ? (quranBloc.state as QuranLoaded).allSurahs.firstWhere((s) => s.number == prevNumber, orElse: () => state.currentSurah!)
+        : null;
+
+    if (prevSurah != null && prevSurah.number != currentNumber) {
+      add(PlayAudio(surah: prevSurah, qari: state.currentQari!));
+    }
+  }
+
   Future<void> _onSeekAudio(
     SeekAudio event,
     Emitter<AudioPlayerState> emit,
@@ -158,6 +218,8 @@ class AudioPlayerBloc extends Bloc<AudioPlayerEvent, AudioPlayerState> {
     _durationSubscription?.cancel();
     _playerStateSubscription?.cancel();
     _playerCompleteSubscription?.cancel();
+    _skipNextSubscription?.cancel();
+    _skipPrevSubscription?.cancel();
     return super.close();
   }
 }
