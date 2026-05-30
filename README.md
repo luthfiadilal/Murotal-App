@@ -60,13 +60,20 @@ lib/
 
 Desain aplikasi mengusung palet warna *Dark Emerald* (`#013226`) sebagai warna dominan dengan aksen *Premium Gold* (`#D3AA58`), memberikan kesan eksklusif, tenang, dan elegan.
 
-*(Ganti tag gambar di bawah ini dengan screenshot aplikasi asli Anda)*
+<div align="center">
+  <img src="lib/assets/SplashScreen.png" alt="Splash Screen" width="24%"></img>
+  <img src="lib/assets/Home.PNG" alt="Home Screen" width="24%"></img>
+  <img src="lib/assets/PlayerScreen.PNG" alt="Player Screen" width="24%"></img>
+  <img src="lib/assets/LirikScreen.PNG" alt="Lirik Screen" width="24%"></img>
+</div>
+
+<br>
 
 <div align="center">
-  <img src="https://via.placeholder.com/250x500.png?text=Home+Screen" width="24%"></img>
-  <img src="https://via.placeholder.com/250x500.png?text=Search+Screen" width="24%"></img>
-  <img src="https://via.placeholder.com/250x500.png?text=Player+Screen" width="24%"></img>
-  <img src="https://via.placeholder.com/250x500.png?text=Lyrics+Screen" width="24%"></img>
+  <img src="lib/assets/AntrianScreen.PNG" alt="Antrian Screen" width="24%"></img>
+  <img src="lib/assets/SearchScreen.PNG" alt="Search Screen" width="24%"></img>
+  <img src="lib/assets/FavoriteScreen.PNG" alt="Favorite Screen" width="24%"></img>
+  <img src="lib/assets/MiniPalyerBarNotifikasi.PNG" alt="Mini Player Notifikasi" width="24%"></img>
 </div>
 
 ## Kontributor

@@ -96,11 +96,11 @@ class AudioPlayerBloc extends Bloc<AudioPlayerEvent, AudioPlayerState> {
 
     final mediaItem = MediaItem(
       id: url,
-      album: event.qari.englishName ?? 'Quran',
+      album: 'Murotal Al-Quran',
       title: event.surah.englishName ?? 'Surah',
       artist: event.qari.englishName ?? 'Qari',
       artUri: Uri.parse(
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Quran_Kareem.svg/1024px-Quran_Kareem.svg.png'), // placeholder image
+          'https://images.unsplash.com/photo-1609599006353-e629aaab31f5?auto=format&fit=crop&w=800&q=80'), // Aesthetic Quran Image
     );
 
     try {

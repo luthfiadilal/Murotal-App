@@ -69,6 +69,24 @@ class MyAudioHandler extends BaseAudioHandler with SeekHandler {
 
   Future<void> playUrl(String url, {required MediaItem item}) async {
     mediaItem.add(item);
+    
+    // Paksa update state agar notifikasi langsung muncul dalam mode buffering
+    playbackState.add(playbackState.value.copyWith(
+      controls: [
+        MediaControl.skipToPrevious,
+        MediaControl.pause,
+        MediaControl.skipToNext,
+      ],
+      systemActions: const {
+        MediaAction.seek,
+        MediaAction.seekForward,
+        MediaAction.seekBackward,
+      },
+      androidCompactActionIndices: const [0, 1, 2],
+      processingState: AudioProcessingState.buffering,
+      playing: true,
+    ));
+
     await _player.play(UrlSource(url));
   }
 
